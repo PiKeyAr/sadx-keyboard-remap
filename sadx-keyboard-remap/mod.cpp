@@ -81,7 +81,7 @@ extern "C"
 			KButton_Y == -1 || KButton_X == -1 || KButton_B == -1 || KButton_A == -1 
 			)
 		{
-			MessageBox(WindowHandle, L"Invalid key detected! The mod will not work. Please edit the config file or run the config tool again.", L"Keyboard Remapper: Invalid key", MB_OK | MB_ICONERROR);
+			MessageBox(WindowHandle, L"Invalid key detected! The mod will not work.\nPlease edit the config file or run the config tool again.", L"Keyboard Remapper: Invalid key", MB_OK | MB_ICONERROR);
 			return;
 		}
 		WriteData((KeyboardKey**)0x0040F53B, &KeyArray[KButton_A].KeyPointer);
