@@ -2,6 +2,9 @@
 #include "KeyPointers.h"
 #include "KeyVariables.h"
 
+bool DisableMouse = false;
+bool AlternativeLayouts = false;
+
 KeyboardKey VirtualKey_A = { 0, 0, 0 };
 KeyboardKey VirtualKey_B = { 0, 0, 0 };
 KeyboardKey VirtualKey_X = { 0, 0, 0 };
@@ -25,6 +28,7 @@ int FindKey(std::string KeyString)
 	{
 		if (KeyArray[i].KeyConfigName == KeyString) return i;
 	}
+	PrintDebug("Keyboard Remapper: Incorrect key '%s'\n", KeyString.c_str());
 	return 0;
 }
 
@@ -145,6 +149,7 @@ extern "C"
 		const std::string s_config_ini(s_path + "\\config.ini");
 		const IniFile *const config = new IniFile(s_config_ini);
 		DisableMouse = config->getBool("General", "DisableMouse", false);
+		AlternativeLayouts = config->getBool("General", "AlternativeLayouts", false);
 		//Layout 1
 		KButton_A = FindKey(config->getString("Layout 1", "Button A", "X"));
 		KButton_B = FindKey(config->getString("Layout 1", "Button B", "Z"));
@@ -162,50 +167,42 @@ extern "C"
 		KButton_DPadLeft = FindKey(config->getString("Layout 1", "D-Pad Left", "J"));
 		KButton_DPadRight = FindKey(config->getString("Layout 1", "D-Pad Right", "K"));
 		KButton_Center = FindKey(config->getString("Layout 1", "Center Camera", "E"));
-		//Layout 2
-		KButton2_A = FindKey(config->getString("Layout 2", "Button A", "Space"));
-		KButton2_B = FindKey(config->getString("Layout 2", "Button B", "Escape"));
-		KButton2_X = FindKey(config->getString("Layout 2", "Button X", "None"));
-		KButton2_Y = FindKey(config->getString("Layout 2", "Button Y", "None"));
-		KButton2_Start = FindKey(config->getString("Layout 2", "Button Start", "Home"));
-		KButton2_L = FindKey(config->getString("Layout 2", "Trigger L", "None"));
-		KButton2_R = FindKey(config->getString("Layout 2", "Trigger R", "None"));
-		KButton2_Up = FindKey(config->getString("Layout 2", "Analog Up", "R"));
-		KButton2_Down = FindKey(config->getString("Layout 2", "Analog Down", "C"));
-		KButton2_Left = FindKey(config->getString("Layout 2", "Analog Left", "D"));
-		KButton2_Right = FindKey(config->getString("Layout 2", "Analog Right", "F"));
-		KButton2_DPadUp = FindKey(config->getString("Layout 2", "D-Pad Up", "None"));
-		KButton2_DPadDown = FindKey(config->getString("Layout 2", "D-Pad Down", "None"));
-		KButton2_DPadLeft = FindKey(config->getString("Layout 2", "D-Pad Left", "None"));
-		KButton2_DPadRight = FindKey(config->getString("Layout 2", "D-Pad Right", "None"));
-		KButton2_Center = FindKey(config->getString("Layout 2", "Center Camera", "None"));
-		//Layout 3
-		KButton3_A = FindKey(config->getString("Layout 3", "Button A", "None"));
-		KButton3_B = FindKey(config->getString("Layout 3", "Button B", "V"));
-		KButton3_X = FindKey(config->getString("Layout 3", "Button X", "None"));
-		KButton3_Y = FindKey(config->getString("Layout 3", "Button Y", "None"));
-		KButton3_Start = FindKey(config->getString("Layout 3", "Button Start", "None"));
-		KButton3_L = FindKey(config->getString("Layout 3", "Trigger L", "None"));
-		KButton3_R = FindKey(config->getString("Layout 3", "Trigger R", "None"));
-		KButton3_Up = FindKey(config->getString("Layout 3", "Analog Up", "None"));
-		KButton3_Down = FindKey(config->getString("Layout 3", "Analog Down", "None"));
-		KButton3_Left = FindKey(config->getString("Layout 3", "Analog Left", "None"));
-		KButton3_Right = FindKey(config->getString("Layout 3", "Analog Right", "None"));
-		KButton3_DPadUp = FindKey(config->getString("Layout 3", "D-Pad Up", "None"));
-		KButton3_DPadDown = FindKey(config->getString("Layout 3", "D-Pad Down", "None"));
-		KButton3_DPadLeft = FindKey(config->getString("Layout 3", "D-Pad Left", "None"));
-		KButton3_DPadRight = FindKey(config->getString("Layout 3", "D-Pad Right", "None"));
-		KButton3_Center = FindKey(config->getString("Layout 3", "Center Camera", "None"));
-		//Check layout 1 for invalid keys
-		if (
-			KButton_DPadRight == 0 || KButton_DPadLeft == 0 || KButton_DPadDown == 0 || KButton_DPadUp == 0 ||
-			KButton_Right == 0 || KButton_Left == 0 || KButton_Down == 0 || KButton_Up == 0 || 
-			KButton_R == 0 || KButton_L == 0 || KButton_Start == 0 || KButton_Center == 0 ||
-			KButton_Y == 0 || KButton_X == 0 || KButton_B == 0 || KButton_A == 0 
-			)
+		if (AlternativeLayouts)
 		{
-			MessageBox(WindowHandle, L"Invalid key detected! The mod will not work.\nPlease edit the config file or run the config tool again.", L"Keyboard Remapper: Invalid key", MB_OK | MB_ICONERROR);
-			return;
+			//Layout 2
+			KButton2_A = FindKey(config->getString("Layout 2", "Button A", "Space"));
+			KButton2_B = FindKey(config->getString("Layout 2", "Button B", "Escape"));
+			KButton2_X = FindKey(config->getString("Layout 2", "Button X", "None"));
+			KButton2_Y = FindKey(config->getString("Layout 2", "Button Y", "None"));
+			KButton2_Start = FindKey(config->getString("Layout 2", "Button Start", "Home"));
+			KButton2_L = FindKey(config->getString("Layout 2", "Trigger L", "None"));
+			KButton2_R = FindKey(config->getString("Layout 2", "Trigger R", "None"));
+			KButton2_Up = FindKey(config->getString("Layout 2", "Analog Up", "R"));
+			KButton2_Down = FindKey(config->getString("Layout 2", "Analog Down", "C"));
+			KButton2_Left = FindKey(config->getString("Layout 2", "Analog Left", "D"));
+			KButton2_Right = FindKey(config->getString("Layout 2", "Analog Right", "F"));
+			KButton2_DPadUp = FindKey(config->getString("Layout 2", "D-Pad Up", "None"));
+			KButton2_DPadDown = FindKey(config->getString("Layout 2", "D-Pad Down", "None"));
+			KButton2_DPadLeft = FindKey(config->getString("Layout 2", "D-Pad Left", "None"));
+			KButton2_DPadRight = FindKey(config->getString("Layout 2", "D-Pad Right", "None"));
+			KButton2_Center = FindKey(config->getString("Layout 2", "Center Camera", "None"));
+			//Layout 3
+			KButton3_A = FindKey(config->getString("Layout 3", "Button A", "None"));
+			KButton3_B = FindKey(config->getString("Layout 3", "Button B", "V"));
+			KButton3_X = FindKey(config->getString("Layout 3", "Button X", "None"));
+			KButton3_Y = FindKey(config->getString("Layout 3", "Button Y", "None"));
+			KButton3_Start = FindKey(config->getString("Layout 3", "Button Start", "None"));
+			KButton3_L = FindKey(config->getString("Layout 3", "Trigger L", "None"));
+			KButton3_R = FindKey(config->getString("Layout 3", "Trigger R", "None"));
+			KButton3_Up = FindKey(config->getString("Layout 3", "Analog Up", "Numpad 8"));
+			KButton3_Down = FindKey(config->getString("Layout 3", "Analog Down", "Numpad 2"));
+			KButton3_Left = FindKey(config->getString("Layout 3", "Analog Left", "Numpad 4"));
+			KButton3_Right = FindKey(config->getString("Layout 3", "Analog Right", "Numpad 6"));
+			KButton3_DPadUp = FindKey(config->getString("Layout 3", "D-Pad Up", "None"));
+			KButton3_DPadDown = FindKey(config->getString("Layout 3", "D-Pad Down", "None"));
+			KButton3_DPadLeft = FindKey(config->getString("Layout 3", "D-Pad Left", "None"));
+			KButton3_DPadRight = FindKey(config->getString("Layout 3", "D-Pad Right", "None"));
+			KButton3_Center = FindKey(config->getString("Layout 3", "Center Camera", "None"));
 		}
 		WriteData((KeyboardKey**)0x40F53B, &VirtualKey_A);
 		WriteData((KeyboardKey**)0x40F544, &DummyKey);
@@ -227,6 +224,10 @@ extern "C"
 		WriteData((KeyboardKey**)0x40F687, &VirtualKey_DPadDown);
 		WriteData((KeyboardKey**)0x40F692, &VirtualKey_DPadUp);
 		WriteCall((void*)0x437547, GetEKey);
+		WriteData<7>((char*)0x40F61D, 0x90u); //Disable hardcoded arrows affecting the analog stick
+		WriteData<7>((char*)0x40F611, 0x90u); //Disable hardcoded arrows affecting the analog stick
+		WriteData<7>((char*)0x40F5F0, 0x90u); //Disable hardcoded arrows affecting the analog stick (numpad)
+		WriteData<7>((char*)0x40F5F7, 0x90u); //Disable hardcoded arrows affecting the analog stick (numpad)
 		if (DisableMouse)
 		{
 			WriteData<1>((char*)0x40E900, 0xC3u); //Kill MouseUpdate

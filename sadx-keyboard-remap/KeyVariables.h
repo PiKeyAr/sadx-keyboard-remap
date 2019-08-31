@@ -48,5 +48,3 @@ int KButton3_DPadDown = 0;
 int KButton3_DPadLeft = 0;
 int KButton3_DPadRight = 0;
 int KButton3_Center = 0;
-
-bool DisableMouse = false;
