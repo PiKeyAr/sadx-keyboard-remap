@@ -24,15 +24,13 @@ To ensure 100% vanilla behavior, disable the option "AlternativeLayouts" in the 
 
 **Known issues**
 
--This mod is NOT compatible with the Input Mod. There are no plans to make these two mods compatible.
+1) This mod is NOT compatible with the Input Mod. There are no plans to make these two mods compatible.
 
--Up and Down on the D-Pad are swapped when using the Smooth Camera mod.
+2) Up and Down on the D-Pad are swapped when using the Smooth Camera mod.
 
--Some keys are not detected by vanilla SADX so they are not mappable and will be displayed as "None" in the config tool.
+3) Some keys are not detected by vanilla SADX so they are not mappable and will be displayed as "None" in the config tool.
 
-Developer's Twitter: https://twitter.com/pkr_sadx
-
-**Related mods/tools:**
+**Related mods/tools**
 
 SADX Mod Installer: http://www.moddb.com/mods/sadx-dreamcast-conversion/news/new-mod-installer-now-available1
 
