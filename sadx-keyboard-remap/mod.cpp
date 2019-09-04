@@ -43,12 +43,17 @@ void CheckPressedKeys()
 	KeyboardKey *Key1;
 	KeyboardKey *Key2;
 	KeyboardKey *Key3;
-	//If alternative layouts are disabled, just check the E key
+	//If alternative layouts are disabled, just check the E key and the Z button in the first layout
 	if (!AlternativeLayouts)
 	{
+		//E
 		Key1 = &KeyArray[KButton_Center].KeyPointer;
 		if (Key1->held) VirtualKey_Center.held = 1; else VirtualKey_Center.held = 0;
 		if (Key1->pressed) VirtualKey_Center.pressed = 1; else VirtualKey_Center.pressed = 0;
+		//Z
+		Key1 = &KeyArray[KButton_Z].KeyPointer;
+		if (Key1->held) ControllerPointers[0]->HeldButtons |= Buttons_Z; else ControllerPointers[0]->HeldButtons &= ~Buttons_Z;
+		if (Key1->pressed) ControllerPointers[0]->PressedButtons |= Buttons_Z; else ControllerPointers[0]->PressedButtons &= ~Buttons_Z;
 	}
 	//If not, do the whole thing
 	else
@@ -77,6 +82,12 @@ void CheckPressedKeys()
 		Key3 = &KeyArray[KButton3_Y].KeyPointer;
 		if (Key1->held || Key2->held || Key3->held) VirtualKey_Y.held = 1; else VirtualKey_Y.held = 0;
 		if (Key1->pressed || Key2->pressed || Key3->pressed) VirtualKey_Y.pressed = 1; else VirtualKey_Y.pressed = 0;
+		//Z
+		Key1 = &KeyArray[KButton_Z].KeyPointer;
+		Key2 = &KeyArray[KButton2_Z].KeyPointer;
+		Key3 = &KeyArray[KButton3_Z].KeyPointer;
+		if (Key1->held || Key2->held || Key3->held) ControllerPointers[0]->HeldButtons |= Buttons_Z; else ControllerPointers[0]->HeldButtons &= ~Buttons_Z;
+		if (Key1->pressed || Key2->pressed || Key3->pressed) ControllerPointers[0]->PressedButtons |= Buttons_Z; else ControllerPointers[0]->PressedButtons &= ~Buttons_Z;
 		//Start
 		Key1 = &KeyArray[KButton_Start].KeyPointer;
 		Key2 = &KeyArray[KButton2_Start].KeyPointer;
@@ -166,6 +177,7 @@ extern "C"
 		KButton_B = FindKey(config->getString("Layout 1", "Button B", "Z"));
 		KButton_X = FindKey(config->getString("Layout 1", "Button X", "A"));
 		KButton_Y = FindKey(config->getString("Layout 1", "Button Y", "S"));
+		KButton_Z = FindKey(config->getString("Layout 1", "Button Z", "None"));
 		KButton_Start = FindKey(config->getString("Layout 1", "Button Start", "Enter"));
 		KButton_L = FindKey(config->getString("Layout 1", "Trigger L", "Q"));
 		KButton_R = FindKey(config->getString("Layout 1", "Trigger R", "W"));
@@ -201,6 +213,7 @@ extern "C"
 			KButton2_B = FindKey(config->getString("Layout 2", "Button B", "Escape"));
 			KButton2_X = FindKey(config->getString("Layout 2", "Button X", "None"));
 			KButton2_Y = FindKey(config->getString("Layout 2", "Button Y", "None"));
+			KButton2_Z = FindKey(config->getString("Layout 2", "Button Z", "None"));
 			KButton2_Start = FindKey(config->getString("Layout 2", "Button Start", "Home"));
 			KButton2_L = FindKey(config->getString("Layout 2", "Trigger L", "None"));
 			KButton2_R = FindKey(config->getString("Layout 2", "Trigger R", "None"));
@@ -218,6 +231,7 @@ extern "C"
 			KButton3_B = FindKey(config->getString("Layout 3", "Button B", "V"));
 			KButton3_X = FindKey(config->getString("Layout 3", "Button X", "None"));
 			KButton3_Y = FindKey(config->getString("Layout 3", "Button Y", "None"));
+			KButton3_Z = FindKey(config->getString("Layout 3", "Button Z", "None"));
 			KButton3_Start = FindKey(config->getString("Layout 3", "Button Start", "None"));
 			KButton3_L = FindKey(config->getString("Layout 3", "Trigger L", "None"));
 			KButton3_R = FindKey(config->getString("Layout 3", "Trigger R", "None"));
@@ -251,10 +265,10 @@ extern "C"
 			WriteData((KeyboardKey**)0x40F692, &KeyArray[KButton_DPadUp].KeyPointer);
 		}
 		//Remove duplicate vanilla key pointers (for Enter+Home, X+Space etc.)
-		WriteData((KeyboardKey**)0x40F544, &DummyKey);
-		WriteData((KeyboardKey**)0x40F55E, &DummyKey);
-		WriteData((KeyboardKey**)0x40F567, &DummyKey);
-		WriteData((KeyboardKey**)0x40F57E, &DummyKey);
+		WriteData((KeyboardKey**)0x40F544, &DummyKey); //Layout 2 A
+		WriteData((KeyboardKey**)0x40F55E, &DummyKey); //Layout 2 B
+		WriteData((KeyboardKey**)0x40F567, &DummyKey); //Layout 3 B
+		WriteData((KeyboardKey**)0x40F57E, &DummyKey); //Layout 2 Start
 		//Disable hardcoded arrows affecting the analog stick
 		WriteData<7>((char*)0x40F61D, 0x90u); //Up and down
 		WriteData<7>((char*)0x40F611, 0x90u); //Left and right
