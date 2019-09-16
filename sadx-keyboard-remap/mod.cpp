@@ -54,6 +54,14 @@ void CheckPressedKeys()
 		Key1 = &KeyArray[KButton_Z].KeyPointer;
 		if (Key1->held) ControllerPointers[0]->HeldButtons |= Buttons_Z; else ControllerPointers[0]->HeldButtons &= ~Buttons_Z;
 		if (Key1->pressed) ControllerPointers[0]->PressedButtons |= Buttons_Z; else ControllerPointers[0]->PressedButtons &= ~Buttons_Z;
+		//C
+		Key1 = &KeyArray[KButton_C].KeyPointer;
+		if (Key1->held) ControllerPointers[0]->HeldButtons |= Buttons_C; else ControllerPointers[0]->HeldButtons &= ~Buttons_C;
+		if (Key1->pressed) ControllerPointers[0]->PressedButtons |= Buttons_C; else ControllerPointers[0]->PressedButtons &= ~Buttons_C;
+		//Z
+		Key1 = &KeyArray[KButton_D].KeyPointer;
+		if (Key1->held) ControllerPointers[0]->HeldButtons |= Buttons_D; else ControllerPointers[0]->HeldButtons &= ~Buttons_D;
+		if (Key1->pressed) ControllerPointers[0]->PressedButtons |= Buttons_D; else ControllerPointers[0]->PressedButtons &= ~Buttons_D;
 	}
 	//If not, do the whole thing
 	else
@@ -88,6 +96,18 @@ void CheckPressedKeys()
 		Key3 = &KeyArray[KButton3_Z].KeyPointer;
 		if (Key1->held || Key2->held || Key3->held) ControllerPointers[0]->HeldButtons |= Buttons_Z; else ControllerPointers[0]->HeldButtons &= ~Buttons_Z;
 		if (Key1->pressed || Key2->pressed || Key3->pressed) ControllerPointers[0]->PressedButtons |= Buttons_Z; else ControllerPointers[0]->PressedButtons &= ~Buttons_Z;
+		//C
+		Key1 = &KeyArray[KButton_C].KeyPointer;
+		Key2 = &KeyArray[KButton2_C].KeyPointer;
+		Key3 = &KeyArray[KButton3_C].KeyPointer;
+		if (Key1->held || Key2->held || Key3->held) ControllerPointers[0]->HeldButtons |= Buttons_C; else ControllerPointers[0]->HeldButtons &= ~Buttons_C;
+		if (Key1->pressed || Key2->pressed || Key3->pressed) ControllerPointers[0]->PressedButtons |= Buttons_C; else ControllerPointers[0]->PressedButtons &= ~Buttons_C;
+		//D
+		Key1 = &KeyArray[KButton_D].KeyPointer;
+		Key2 = &KeyArray[KButton2_D].KeyPointer;
+		Key3 = &KeyArray[KButton3_D].KeyPointer;
+		if (Key1->held || Key2->held || Key3->held) ControllerPointers[0]->HeldButtons |= Buttons_D; else ControllerPointers[0]->HeldButtons &= ~Buttons_D;
+		if (Key1->pressed || Key2->pressed || Key3->pressed) ControllerPointers[0]->PressedButtons |= Buttons_D; else ControllerPointers[0]->PressedButtons &= ~Buttons_D;
 		//Start
 		Key1 = &KeyArray[KButton_Start].KeyPointer;
 		Key2 = &KeyArray[KButton2_Start].KeyPointer;
@@ -167,17 +187,20 @@ extern "C"
 {
 	__declspec(dllexport) void __cdecl Init(const char *path, const HelperFunctions &helperFunctions)
 	{
+		if (GetModuleHandle(L"sadx-input-mod") != nullptr) return;
 		const std::string s_path(path);
 		const std::string s_config_ini(s_path + "\\config.ini");
 		const IniFile *const config = new IniFile(s_config_ini);
-		DisableMouse = config->getBool("General", "DisableMouse", false);
-		AlternativeLayouts = config->getBool("General", "AlternativeLayouts", false);
+		DisableMouse = config->getBool("Config", "DisableMouse", false);
+		AlternativeLayouts = config->getBool("Config", "AlternativeLayouts", false);
 		//Layout 1
 		KButton_A = FindKey(config->getString("Layout 1", "Button A", "X"));
 		KButton_B = FindKey(config->getString("Layout 1", "Button B", "Z"));
 		KButton_X = FindKey(config->getString("Layout 1", "Button X", "A"));
 		KButton_Y = FindKey(config->getString("Layout 1", "Button Y", "S"));
 		KButton_Z = FindKey(config->getString("Layout 1", "Button Z", "None"));
+		KButton_C = FindKey(config->getString("Layout 1", "Button C", "None"));
+		KButton_D = FindKey(config->getString("Layout 1", "Button D", "None"));
 		KButton_Start = FindKey(config->getString("Layout 1", "Button Start", "Enter"));
 		KButton_L = FindKey(config->getString("Layout 1", "Trigger L", "Q"));
 		KButton_R = FindKey(config->getString("Layout 1", "Trigger R", "W"));
@@ -214,6 +237,8 @@ extern "C"
 			KButton2_X = FindKey(config->getString("Layout 2", "Button X", "None"));
 			KButton2_Y = FindKey(config->getString("Layout 2", "Button Y", "None"));
 			KButton2_Z = FindKey(config->getString("Layout 2", "Button Z", "None"));
+			KButton2_C = FindKey(config->getString("Layout 2", "Button C", "None"));
+			KButton2_D = FindKey(config->getString("Layout 2", "Button D", "None"));
 			KButton2_Start = FindKey(config->getString("Layout 2", "Button Start", "Home"));
 			KButton2_L = FindKey(config->getString("Layout 2", "Trigger L", "None"));
 			KButton2_R = FindKey(config->getString("Layout 2", "Trigger R", "None"));
@@ -232,6 +257,8 @@ extern "C"
 			KButton3_X = FindKey(config->getString("Layout 3", "Button X", "None"));
 			KButton3_Y = FindKey(config->getString("Layout 3", "Button Y", "None"));
 			KButton3_Z = FindKey(config->getString("Layout 3", "Button Z", "None"));
+			KButton3_C = FindKey(config->getString("Layout 3", "Button C", "None"));
+			KButton3_D = FindKey(config->getString("Layout 3", "Button D", "None"));
 			KButton3_Start = FindKey(config->getString("Layout 3", "Button Start", "None"));
 			KButton3_L = FindKey(config->getString("Layout 3", "Trigger L", "None"));
 			KButton3_R = FindKey(config->getString("Layout 3", "Trigger R", "None"));
@@ -286,6 +313,7 @@ extern "C"
 	}
 	__declspec(dllexport) void __cdecl OnInput()
 	{
+		if (GetModuleHandle(L"sadx-input-mod") != nullptr) return;
 		CheckPressedKeys();
 	}
 	__declspec(dllexport) ModInfo SADXModInfo = { ModLoaderVer };
