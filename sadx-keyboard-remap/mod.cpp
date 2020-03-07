@@ -27,6 +27,7 @@ int FindKey(std::string KeyString)
 	for (unsigned int i = 0; i < LengthOfArray(KeyArray); i++)
 	{
 		if (KeyArray[i].KeyConfigName == KeyString) return i;
+		else if (KeyArray[i].KeyConfigName + " " == KeyString) return i;
 	}
 	PrintDebug("Keyboard Remapper: Incorrect key '%s'\n", KeyString.c_str());
 	return 0;
