@@ -1,5 +1,7 @@
 # SADX Keyboard Remapper by PkR
 
+**This mod has been discontinued - use [SADX Input Mod](https://github.com/michael-fadely/sadx-input-mod) instead.**
+
 Keyboard Remapper is a mod for Sonic Adventure DX PC (2004) that lets you change keyboard controls. To use this mod, you need SADX Mod Loader and SADX Mod Manager.
 Starting with version 2.2 the mod also allows to map the controller's Z button, which is normally inaccessible by keyboard.
 
